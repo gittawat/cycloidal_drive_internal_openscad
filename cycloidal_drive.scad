@@ -15,11 +15,13 @@ module cycloidal_disc(R=45,
     linear_extrude(height = 5,center = true)
     difference(){
     polygon(coords);
+    //shaft roller bearing hole
     circle(r = E+Sr);
+    //
     for(i = [0:(5)]){
         angle = i*(360/6);
-        rotate([0,0,180])translate([(R+1)*cos(angle)/2,(R+1)*sin(angle)/2,0]) 
-        circle(r= E+Rr);
+        rotate([0,0,180])translate([(R)*cos(angle)/2,(R)*sin(angle)/2,0]) 
+        circle(r = E+Rr);
         }
     }
 }
