@@ -1,9 +1,11 @@
 
 cycloidal_drive(
-        R = 45, // ring pitch radius 
+        R = 50, // ring pitch radius 
+        
         Ror = 6.5, // roller outer radius
         Rir = 2.5,  // roller inner radius
         rollerThickness = 4, // roller thickness
+
         N = 10, // numbers of roller -> output/intput ratio = N - 1 
         E = 2,  // Eccentricity of the drive
         discThickness = 7, //thickness of tranmission disc 
@@ -30,7 +32,7 @@ module copy_mirror(vec){
     children();
 }
 
-module cycloidal_disc(R, Ror, N, E, Sr, Thickness, opd_offs, $fn = 360 * 2)
+module cycloidal_disc(R, Ror, N, E, Sr, Thickness, opd_offs, $fn = 360)
 {
     assert(2 * E < Ror, "E must be less than Ror/2");
     angles = [for (i = [0:$fn - 1]) i * (360 / $fn)];
@@ -164,26 +166,21 @@ module cycloidal_drive(
     }
 
     //draw output shaft
-   // color([0,1,0]) translate([0,0,1+isr_thickness+1+1])difference() {
-   //     cylinder(h = isr_thickness , r = isr_outer_r, center = false,$fn = 60);
-   //     translate([0,0,-1/2]) cylinder(h = isr_thickness+1, r = isr_inner_r, center = false,$fn=60);
-   // }
-
     rotate([0,0,-$t*3600/(N-1)]) 
-        copy_mirror([0,0,1]) color([1,0,0])translate(v = [0,0,1+isr_thickness+1+1]) difference() {
+        copy_mirror([0,0,1]) color(c = [1,0,0], alpha = 0.5) translate(v = [0,0,1+isr_thickness+1+1]) difference() {
             union(){
                 difference() {
                     cylinder(h = 4, r = (R+opd_offs)/2 + Ror, center = false,$fn=60);
                     translate(v = [0,0,-1/2])cylinder(h = isr_thickness+1, r = isr_outer_r, center = false,$fn=60);
-                }
+                };
                 translate(v = [0,0,4])difference(){
                     cylinder(h = isr_thickness-4+2, r = (R+opd_offs)/2 - Ror, center = false);
                     translate(v = [0,0,-1/2 -4]) cylinder(h = isr_thickness+1/2, r = isr_outer_r , center = false);
-                }
+                };
                 translate(v = [0,0,isr_thickness+2]){
                     cylinder(h = osr_thickness, r = osr_inner_r, center = false);
 
-                }
+                };
             }
             cylinder(h = isr_thickness+2+(osr_thickness+1), r = isr_outer_r - 3, center = false);
             for (i = [0:6 - 1])
